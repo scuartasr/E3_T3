@@ -356,6 +356,9 @@ pacf(as.numeric(diffmixta),
 HEGY.test(wts = lny,
           itsd = c(0, 0, c(0)),
           selectlags = list(mode = "aic", Pmax = 12))$stats
+##
+##
+##
 
 # _____________________________________________________________________________
 # _____________________________________________________________________________
@@ -381,3 +384,56 @@ plot(armasubsets(diffmixta,nar=12,nma=12,y.name='AR',ar.method='ols'))
 
 win.graph(heigh=5,width=9) 
 plot(armasubsets(diffmixta,nar=18,nma=18,y.name='AR',ar.method="ols"))
+
+##
+##
+##
+##
+
+# _____________________________________________________________________________
+# _____________________________________________________________________________
+# 7. Ajuste de modelos ========================================================
+
+# Modelo uno. ARIMA(2, 1, 0)(0, 1, 2)[12]
+
+modelo1 <- Arima(lny,
+                 order = c(2, 1, 0),
+                 seasonal = list(order = c(0, 1, 2)),
+                 method = "ML")
+modelo1
+coeftest(modelo1)
+
+# Modelo dos. ARMA(4, 1, 0)(1, 1, 2)[12]
+
+modelo2 <- Arima(lny,
+                 order = c(4, 1, 0),
+                 seasonal = list(order = c(1, 1, 2)),
+                 method = 'ML')
+modelo2
+
+# Modelo tres. ARMA(6, 1, 12)
+
+p3 <-  c(NA, NA, 0, 0, 0, NA)
+q3 <-  c(rep(0, 10), NA, NA)
+arma3 <- c(p3, q3)
+modelo3 <- Arima(lny,
+                 order = c(6, 1, 12),
+                 method = 'ML',
+                 fixed = arma3)
+modelo3
+coeftest(modelo3)
+
+# Modelo cuatro. 
+
+p4 <- c(NA, NA, rep(0, 6), NA)
+q4 <- c(rep(0, 9), NA)
+Q4 <- c(NA)
+arma4 <- c(p4, q4, Q4)
+
+modelo4 <- Arima(lny,
+                 order = c(9, 1, 10),
+                 seasonal = list(order = c(0, 1, 1)),
+                 method = 'ML',
+                 fixed = arma4)
+modelo4
+coeftest(modelo4)
