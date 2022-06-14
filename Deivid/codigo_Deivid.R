@@ -411,13 +411,15 @@ modelo2 <- Arima(lny,
                  method = 'ML')
 modelo2
 
-# Modelo tres. ARMA(6, 1, 12)
+# Modelo tres. ARMA(6, 1, 10)(0, 1, 1)[12]
 
 p3 <-  c(NA, NA, 0, 0, 0, NA)
-q3 <-  c(rep(0, 10), NA, NA)
-arma3 <- c(p3, q3)
+q3 <-  c(rep(0, 9), NA)
+Q3 <- c(NA)
+arma3 <- c(p3, q3, Q3)
 modelo3 <- Arima(lny,
-                 order = c(6, 1, 12),
+                 order = c(6, 1, 10),
+                 seasonal = list(order = c(0, 1, 1)),
                  method = 'ML',
                  fixed = arma3)
 modelo3
@@ -437,3 +439,34 @@ modelo4 <- Arima(lny,
                  fixed = arma4)
 modelo4
 coeftest(modelo4)
+
+
+#C?lculo de AIC y BIC versi?n exp(Cn*(p))
+yhat1=exp(modelo1$fitted)*exp(modelo1$sigma2/2)
+yhat2=exp(modelo2$fitted)*exp(modelo2$sigma2/2)
+yhat3=exp(modelo3$fitted)*exp(modelo3$sigma2/2)
+yhat4=exp(modelo4$fitted)*exp(modelo4$sigma2/2)
+
+#seudo residuos
+resorig1=yt-yhat1
+resorig2=yt-yhat2
+resorig3=yt-yhat3
+resorig4=yt-yhat4
+
+
+k1=length(coef(modelo1)[coef(modelo1)!=0]);k1 #n?mero de par?metros del modelo1
+k2=length(coef(modelo2)[coef(modelo2)!=0]);k2 #n?mero de par?metros del modelo2
+k3=length(coef(modelo3)[coef(modelo3)!=0]);k3 #n?mero de par?metros del modelo3
+k4=length(coef(modelo4)[coef(modelo4)!=0]);k4 #n?mero de par?metros del modelo4
+
+
+Criterios1=exp.crit.inf.resid(resorig1,n.par=k1);Criterios1
+Criterios2=exp.crit.inf.resid(resorig2,n.par=k2);Criterios2
+Criterios3=exp.crit.inf.resid(resorig3,n.par=k3);Criterios3
+Criterios4=exp.crit.inf.resid(resorig4,n.par=k4);Criterios4
+
+
+#Tabla n?mero de par?metros y criterios de informaci?n
+tablacriterios=rbind(Criterios1,Criterios2,Criterios3,Criterios4)
+rownames(tablacriterios)=paste0("Modelo",1:4)
+tablacriterios
