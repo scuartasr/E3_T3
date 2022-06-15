@@ -1,7 +1,7 @@
 # Eliminación de todos los objetos anteriores
 rm(list=ls(all=TRUE))
 
-# _____________________________________________________________________________
+ # _____________________________________________________________________________
 # _____________________________________________________________________________
 # Paquetes y funciones necesarias =============================================
 
@@ -18,7 +18,6 @@ library(pdR)
 
 # Funciones de usuario
 
-source("https://raw.githubusercontent.com/NelfiGonzalez/Funciones-de-Usuario-Estadistica-III/main/Funciones-Criterios.Informacion-Calidad.Intervalos.R")
 source("https://raw.githubusercontent.com/NelfiGonzalez/Funciones-de-Usuario-Estadistica-III/main/Funciones-Criterios.Informacion-Calidad.Intervalos.R")
 source("https://raw.githubusercontent.com/NelfiGonzalez/Funciones-de-Usuario-Estadistica-III/main/Funcion-regexponencial.R")
 source("https://raw.githubusercontent.com/NelfiGonzalez/Funciones-de-Usuario-Estadistica-III/main/Funcion-SuavizamientoEstacional.R")
@@ -394,7 +393,11 @@ plot(armasubsets(diffmixta,nar=18,nma=18,y.name='AR',ar.method="ols"))
 # _____________________________________________________________________________
 # 7. Ajuste de modelos ========================================================
 
-# Modelo uno. ARIMA(2, 1, 0)(0, 1, 2)[12]
+## _________________________________________________
+## 7.1. Modelo uno. ARIMA(2, 1, 0)(0, 1, 2)[12] ====
+## _________________________________________________
+
+# Ajuste
 
 modelo1 <- Arima(lny,
                  order = c(2, 1, 0),
@@ -403,7 +406,20 @@ modelo1 <- Arima(lny,
 modelo1
 coeftest(modelo1)
 
-# Modelo dos. ARMA(4, 1, 0)(1, 1, 2)[12]
+# Cálculo de AIC y BIC
+
+k1 = length(modelo1$coef[modelo1$coef != 0])
+ythat1 = exp(modelo1$fitted) * exp(modelo1$sigma2/2)
+res.orig1 = yt - ythat1
+AIC_BIC_modelo1 <- exp.crit.inf.resid(residuales = res.orig1,
+                                      n.par = k1)
+AIC_BIC_modelo2
+
+## _________________________________________________
+## 7.2. Modelo dos. ARIMA(4, 1, 0)(1, 1, 2)[12] ====
+## _________________________________________________
+
+# Ajuste
 
 modelo2 <- Arima(lny,
                  order = c(4, 1, 0),
@@ -411,19 +427,47 @@ modelo2 <- Arima(lny,
                  method = 'ML')
 modelo2
 
-# Modelo tres. ARMA(6, 1, 12)
+# Cálculo de AIC y BIC
+
+k2 = length(modelo1$coef[modelo2$coef != 0])
+ythat2 = exp(modelo2$fitted) * exp(modelo2$sigma2/2)
+res.orig2 = yt - ythat2
+AIC_BIC_modelo2 <- exp.crit.inf.resid(residuales = res.orig2,
+                                      n.par = k2)
+AIC_BIC_modelo2
+
+## ___________________________________________________
+## 7.3. Modelo tres. ARIMA(6, 1, 10)(0, 1, 1)[12] ====
+## ___________________________________________________
+
+# Ajuste
 
 p3 <-  c(NA, NA, 0, 0, 0, NA)
-q3 <-  c(rep(0, 10), NA, NA)
-arma3 <- c(p3, q3)
+q3 <-  c(rep(0, 9), NA)
+Q3 <- c(NA)
+arma3 <- c(p3, q3, Q3)
 modelo3 <- Arima(lny,
-                 order = c(6, 1, 12),
+                 order = c(6, 1, 10),
+                 seasonal = list(order = c(0, 1, 1)),
                  method = 'ML',
                  fixed = arma3)
 modelo3
 coeftest(modelo3)
 
-# Modelo cuatro. 
+# Cálculo de AIC y BIC
+
+k3 = length(modelo3$coef[modelo3$coef != 0])
+ythat3 = exp(modelo3$fitted) * exp(modelo3$sigma2/2)
+res.orig3 = yt - ythat3
+AIC_BIC_modelo3 <- exp.crit.inf.resid(residuales = res.orig3,
+                                      n.par = k3)
+AIC_BIC_modelo3
+
+## __________________________________________________
+## 7.4. Modelo uno. ARIMA(9, 1, 10)(0, 1, 1)[12] ====
+## __________________________________________________
+
+# Ajuste
 
 p4 <- c(NA, NA, rep(0, 6), NA)
 q4 <- c(rep(0, 9), NA)
@@ -437,3 +481,17 @@ modelo4 <- Arima(lny,
                  fixed = arma4)
 modelo4
 coeftest(modelo4)
+
+# Cálculo de AIC y BIC
+
+k4 = length(modelo1$coef[modelo4$coef != 0])
+ythat4 = exp(modelo4$fitted) * exp(modelo4$sigma2/2)
+res.orig4 = yt - ythat4
+AIC_BIC_modelo4 <- exp.crit.inf.resid(residuales = res.orig4,
+                                      n.par = k4)
+AIC_BIC_modelo4
+
+
+
+
+
