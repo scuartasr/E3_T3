@@ -410,6 +410,7 @@ modelo2 <- Arima(lny,
                  seasonal = list(order = c(1, 1, 2)),
                  method = 'ML')
 modelo2
+coeftest(modelo2)
 
 # Modelo tres. ARMA(6, 1, 10)(0, 1, 1)[12]
 
