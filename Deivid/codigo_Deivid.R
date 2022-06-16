@@ -448,6 +448,21 @@ yhat2=exp(modelo2$fitted)*exp(modelo2$sigma2/2)
 yhat3=exp(modelo3$fitted)*exp(modelo3$sigma2/2)
 yhat4=exp(modelo4$fitted)*exp(modelo4$sigma2/2)
 
+win.graph(width=18,height=13)
+layout(rbind(c(1,2,3),c(4,5,6)))
+plot(datos)
+lines(yhat1,col=2)
+legend("topleft",legend=c("Original","Ajuste modelo 1"),col=1:2,lty=1)
+plot(datos)
+lines(yhat2,col=2)
+legend("topleft",legend=c("Original","Ajuste modelo 2"),col=1:2,lty=1)
+plot(datos)
+lines(yhat3,col=2)
+legend("topleft",legend=c("Original","Ajuste modelo 3"),col=1:2,lty=1)
+plot(datos)
+lines(yhat4,col=2)
+legend("topleft",legend=c("Original","Ajuste modelo 4"),col=1:2,lty=1)
+
 #seudo residuos
 resorig1=yt-yhat1
 resorig2=yt-yhat2
