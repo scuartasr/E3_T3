@@ -325,7 +325,7 @@ acf(as.numeric(diff12lny),
 abline(v = seq(12, 36, by = 12),
        col = 'darkblue', lty = 2)
 
-# Diferencia mixta. Se agrega su PACF.
+### 4.1.1.Diferencia mixta. Se agrega su PACF. ======================================
 
 diffmixta = diff(diff(lny, lag = 12))
 
@@ -336,6 +336,7 @@ abline(h=mean(diffmixta),
        col = 2)
 grid(col = 'gray', lwd = 1)
 
+win.graph(width = 3.7, height = 2.8)
 acf(as.numeric(diffmixta),
     xlab = 'Rezago',
     lag.max=36,
@@ -343,17 +344,18 @@ acf(as.numeric(diffmixta),
     ci.col="red",
     main=expression(paste("ACF",sep=" ","de",sep=" ",
                           nabla,nabla[12],sep="",log(Y[t]))),
-    lwd = 3)
+    lwd = 2)
 abline(v = seq(12, 36, by = 12),
        col = 'darkblue', lty = 2)
 
+win.graph(width = 3.7, height = 2.8)
 pacf(as.numeric(diffmixta),
     xlab = 'Rezago',
     lag.max=36,
     ci.col="red",
     main=expression(paste("PACF",sep=" ","de",sep=" ",
                           nabla,nabla[12],sep="",log(Y[t]))),
-    lwd = 3)
+    lwd = 2)
 abline(v = seq(12, 36, by = 12),
        col = 'darkblue', lty = 2)
 
