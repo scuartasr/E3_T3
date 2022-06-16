@@ -258,7 +258,10 @@ acf(as.numeric(log(yt)),
     ci.type = "ma",
     col = 1,
     ci.col = 2,
-    main=expression(paste("ACF",sep=" ","de",sep=" ",log(Y[t]))))
+    main=expression(paste("ACF",sep=" ","de",sep=" ",log(Y[t]))),
+    lwd = 3)
+abline(v = seq(12, 36, by = 12),
+       col = 'darkblue', lty = 2)
 
 ## __________________________________________
 ## 4.1. Diferencias sobre la serie =========
@@ -294,7 +297,10 @@ acf(as.numeric(diff1lny),
     lag.max=36,
     ci.type="ma",
     ci.col="red",
-    main=expression(paste("ACF",sep=" ","de",sep=" ",nabla,sep="",log(Y[t]))))
+    main=expression(paste("ACF",sep=" ","de",sep=" ",nabla,sep="",log(Y[t]))),
+    lwd = 3)
+abline(v = seq(12, 36, by = 12),
+       col = 'darkblue', lty = 2)
 
 # Primera diferencia estacional (∇₁₂logYₜ)
 
@@ -314,8 +320,10 @@ acf(as.numeric(diff12lny),
     ci.type="ma",
     ci.col="red",
     main=expression(paste("ACF",sep=" ","de",
-                          sep=" ",nabla[12],sep="",log(Y[t]))))
-grid(col = 'gray', lwd = 1)
+                          sep=" ",nabla[12],sep="",log(Y[t]))),
+    lwd = 3)
+abline(v = seq(12, 36, by = 12),
+       col = 'darkblue', lty = 2)
 
 # Diferencia mixta. Se agrega su PACF.
 
@@ -334,15 +342,20 @@ acf(as.numeric(diffmixta),
     ci.type="ma",
     ci.col="red",
     main=expression(paste("ACF",sep=" ","de",sep=" ",
-                          nabla,nabla[12],sep="",log(Y[t]))))
-grid(col = 'gray', lwd = 1)
+                          nabla,nabla[12],sep="",log(Y[t]))),
+    lwd = 3)
+abline(v = seq(12, 36, by = 12),
+       col = 'darkblue', lty = 2)
 
 pacf(as.numeric(diffmixta),
     xlab = 'Rezago',
     lag.max=36,
     ci.col="red",
     main=expression(paste("ACF",sep=" ","de",sep=" ",
-                          nabla,nabla[12],sep="",log(Y[t]))))
+                          nabla,nabla[12],sep="",log(Y[t]))),
+    lwd = 3)
+abline(v = seq(12, 36, by = 12),
+       col = 'darkblue', lty = 2)
 
 ##
 ##
