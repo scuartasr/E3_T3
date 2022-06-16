@@ -33,7 +33,8 @@ source("https://raw.githubusercontent.com/NelfiGonzalez/Funciones-de-Usuario-Est
 # 1. Lectura de datos =========================================================
 
 # Lectura de la base de datos
-enlace <- "./anexos-emmet-noviembre-2021-1-total industria-modif.csv"
+#enlace <- "./anexos-emmet-noviembre-2021-1-total industria-modif.csv"
+enlace<-file.choose()
 datos <- read.table(file = enlace,
                     header=T,
                     sep=";",
@@ -258,10 +259,7 @@ acf(as.numeric(log(yt)),
     ci.type = "ma",
     col = 1,
     ci.col = 2,
-    main=expression(paste("ACF",sep=" ","de",sep=" ",log(Y[t]))),
-    lwd = 3)
-abline(v = seq(12, 36, by = 12),
-       col = 'darkblue', lty = 2)
+    main=expression(paste("ACF",sep=" ","de",sep=" ",log(Y[t]))))
 
 ## __________________________________________
 ## 4.1. Diferencias sobre la serie =========
@@ -297,10 +295,7 @@ acf(as.numeric(diff1lny),
     lag.max=36,
     ci.type="ma",
     ci.col="red",
-    main=expression(paste("ACF",sep=" ","de",sep=" ",nabla,sep="",log(Y[t]))),
-    lwd = 3)
-abline(v = seq(12, 36, by = 12),
-       col = 'darkblue', lty = 2)
+    main=expression(paste("ACF",sep=" ","de",sep=" ",nabla,sep="",log(Y[t]))))
 
 # Primera diferencia estacional (∇₁₂logYₜ)
 
@@ -320,10 +315,8 @@ acf(as.numeric(diff12lny),
     ci.type="ma",
     ci.col="red",
     main=expression(paste("ACF",sep=" ","de",
-                          sep=" ",nabla[12],sep="",log(Y[t]))),
-    lwd = 3)
-abline(v = seq(12, 36, by = 12),
-       col = 'darkblue', lty = 2)
+                          sep=" ",nabla[12],sep="",log(Y[t]))))
+grid(col = 'gray', lwd = 1)
 
 # Diferencia mixta. Se agrega su PACF.
 
@@ -342,20 +335,15 @@ acf(as.numeric(diffmixta),
     ci.type="ma",
     ci.col="red",
     main=expression(paste("ACF",sep=" ","de",sep=" ",
-                          nabla,nabla[12],sep="",log(Y[t]))),
-    lwd = 3)
-abline(v = seq(12, 36, by = 12),
-       col = 'darkblue', lty = 2)
+                          nabla,nabla[12],sep="",log(Y[t]))))
+grid(col = 'gray', lwd = 1)
 
 pacf(as.numeric(diffmixta),
     xlab = 'Rezago',
     lag.max=36,
     ci.col="red",
     main=expression(paste("ACF",sep=" ","de",sep=" ",
-                          nabla,nabla[12],sep="",log(Y[t]))),
-    lwd = 3)
-abline(v = seq(12, 36, by = 12),
-       col = 'darkblue', lty = 2)
+                          nabla,nabla[12],sep="",log(Y[t]))))
 
 ##
 ##
@@ -428,6 +416,11 @@ AIC_BIC_modelo1 <- exp.crit.inf.resid(residuales = res.orig1,
                                       n.par = k1)
 AIC_BIC_modelo2
 
+#Tabla pronosticos y los IP
+
+predmod1=exp(as.data.frame(forecast(modelo1,h=12,level=95)))*exp(modelo1$sigma2/2) 
+predmod1=ts(predmod1,freq=12,start=c(2020,12)); predmod1
+Amplcobmodelo1=amplitud.cobertura(real=ytf,LIP=predmod1[,2],LSP=predmod1[,3])
 ## _________________________________________________
 ## 7.2. Modelo dos. ARIMA(4, 1, 0)(1, 1, 2)[12] ====
 ## _________________________________________________
@@ -448,6 +441,12 @@ res.orig2 = yt - ythat2
 AIC_BIC_modelo2 <- exp.crit.inf.resid(residuales = res.orig2,
                                       n.par = k2)
 AIC_BIC_modelo2
+
+#Tabla pronosticos y los IP
+
+predmod2=exp(as.data.frame(forecast(modelo2,h=12,level=95)))*exp(modelo2$sigma2/2) 
+predmod2=ts(predmod2,freq=12,start=c(2020,12))
+Amplcobmodelo2=amplitud.cobertura(real=ytf,LIP=predmod2[,2],LSP=predmod2[,3])
 
 ## ___________________________________________________
 ## 7.3. Modelo tres. ARIMA(6, 1, 10)(0, 1, 1)[12] ====
@@ -475,6 +474,12 @@ res.orig3 = yt - ythat3
 AIC_BIC_modelo3 <- exp.crit.inf.resid(residuales = res.orig3,
                                       n.par = k3)
 AIC_BIC_modelo3
+
+#Tabla pronosticos y los IP
+
+predmod3=exp(as.data.frame(forecast(modelo3,h=12,level=95)))*exp(modelo3$sigma2/2) 
+predmod3=ts(predmod3,freq=12,start=c(2020,12))
+Amplcobmodelo3=amplitud.cobertura(real=ytf,LIP=predmod3[,2],LSP=predmod3[,3])
 
 ## __________________________________________________
 ## 7.4. Modelo uno. ARIMA(9, 1, 10)(0, 1, 1)[12] ====
@@ -505,6 +510,40 @@ AIC_BIC_modelo4 <- exp.crit.inf.resid(residuales = res.orig4,
 AIC_BIC_modelo4
 
 
+#Tabla pronosticos y los IP
 
+predmod4=exp(as.data.frame(forecast(modelo4,h=12,level=95)))*exp(modelo4$sigma2/2) 
+predmod4=ts(predmod4,freq=12,start=c(2020,12))
+Amplcobmodelo4=amplitud.cobertura(real=ytf,LIP=predmod4[,2],LSP=predmod4[,3])
 
+# Comparacion grafica de los pronosticos
+# ------------------------------------------
 
+win.graph()
+
+vector.auxiliar <- c(ytf, predmod1[,1], predmod2[,1],
+                     predmod3[,1], predmod4[,1])
+par(adj = 0.5)
+plot(ytf, type = "b", pch = 19, lty = 1, col = 1, lwd = 2,
+     ylab = "Índice de ventas nominales",
+     xlab = "Periodo [mmm - yy]",
+     ylim = c(min(vector.auxiliar), max(vector.auxiliar)),
+     xaxt = "n")
+lines(predmod1[,1], col = 2, pch = 2, lty = 2, type = "b", lwd = 2)
+lines(predmod2[,1], col = 3, pch = 3, lty = 3, type = "b", lwd = 2)
+lines(predmod3[,1], col = 4, pch = 4, lty = 4, type = "b", lwd = 2)
+lines(predmod4[,1], col = 5, pch = 5, lty = 5, type = "b", lwd = 2)
+legend("bottomright",
+       legend = c("Real", "Modelo1", "Modelo 2",
+                  "Modelo 3", "Modelo 4" ), 
+       col = 1:5,
+       pch = c(19, 2:5),
+       lty = 1:5,
+       lwd = 1,
+       cex= 0.7)
+axis(1,at = time(ytf), 
+     labels = c("dic-20", "ene-21", "feb-21", "mar-21",
+                "abr-21", "may-21", "jun-21", "jul-21",
+                "ago-21", "sep-21", "oct-21", "nov-21"))
+
+#commit
