@@ -448,6 +448,7 @@ yhat2=exp(modelo2$fitted)*exp(modelo2$sigma2/2)
 yhat3=exp(modelo3$fitted)*exp(modelo3$sigma2/2)
 yhat4=exp(modelo4$fitted)*exp(modelo4$sigma2/2)
 
+# Gráfico de ajuste
 win.graph(width=18,height=13)
 layout(rbind(c(1,2,3),c(4,5,6)))
 plot(datos)
@@ -486,3 +487,62 @@ Criterios4=exp.crit.inf.resid(resorig4,n.par=k4);Criterios4
 tablacriterios=rbind(Criterios1,Criterios2,Criterios3,Criterios4)
 rownames(tablacriterios)=paste0("Modelo",1:4)
 tablacriterios
+
+#Residuales y sus ACF y PACF
+layout(rbind(c(1,2),c(3,4)))
+plot.ts(residuals(modelo1))
+abline(h=c(-2*sqrt(modelo1$sigma2),0,2*sqrt(modelo1$sigma2)),col=2)
+plot(as.numeric(modelo1$fitted),residuals(modelo1))
+abline(h=c(-2*sqrt(modelo1$sigma2),0,2*sqrt(modelo1$sigma2)),col=2)
+acf(as.numeric(residuals(modelo1)),ci.type="ma",lag.max=36)
+pacf(as.numeric(residuals(modelo1)),lag.max=36)
+
+layout(rbind(c(1,2),c(3,4)))
+plot.ts(residuals(modelo2))
+abline(h=c(-2*sqrt(modelo2$sigma2),0,2*sqrt(modelo2$sigma2)),col=2)
+plot(as.numeric(modelo2$fitted),residuals(modelo2))
+abline(h=c(-2*sqrt(modelo2$sigma2),0,2*sqrt(modelo2$sigma2)),col=2)
+acf(as.numeric(residuals(modelo2)),ci.type="ma",lag.max=36)
+pacf(as.numeric(residuals(modelo2)),lag.max=36)
+
+layout(rbind(c(1,2),c(3,4)))
+plot.ts(residuals(modelo3))
+abline(h=c(-2*sqrt(modelo3$sigma2),0,2*sqrt(modelo3$sigma2)),col=2)
+plot(as.numeric(modelo3$fitted),residuals(modelo3))
+abline(h=c(-2*sqrt(modelo3$sigma2),0,2*sqrt(modelo3$sigma2)),col=2)
+acf(as.numeric(residuals(modelo3)),ci.type="ma",lag.max=36)
+pacf(as.numeric(residuals(modelo3)),lag.max=36)
+
+layout(rbind(c(1,2),c(3,4)))
+plot.ts(residuals(modelo4))
+abline(h=c(-2*sqrt(modelo4$sigma2),0,2*sqrt(modelo4$sigma2)),col=2)
+plot(as.numeric(modelo4$fitted),residuals(modelo4))
+abline(h=c(-2*sqrt(modelo4$sigma2),0,2*sqrt(modelo4$sigma2)),col=2)
+acf(as.numeric(residuals(modelo4)),ci.type="ma",lag.max=36)
+pacf(as.numeric(residuals(modelo4)),lag.max=36)
+
+
+#Test Ljung Box y Shapiro
+BP.LB.test(residuals(modelo1),maxlag=36,type="Ljung")
+shapiro.test(residuals(modelo1))
+
+BP.LB.test(residuals(modelo2),maxlag=36,type="Ljung")
+shapiro.test(residuals(modelo2))
+
+BP.LB.test(residuals(modelo3),maxlag=36,type="Ljung")
+shapiro.test(residuals(modelo3))
+
+BP.LB.test(residuals(modelo4),maxlag=36,type="Ljung")
+shapiro.test(residuals(modelo4))
+
+
+#Gr?ficos probabilidad normal s?lo modelos 1 a 4 pues en 5 se rechaza RB
+layout(rbind(c(1,1,2,2),c(3,3,4,4)))
+qqnorm(residuals(modelo1),main="modelo1")
+qqline(residuals(modelo1))
+qqnorm(residuals(modelo2),main="modelo2")
+qqline(residuals(modelo2))
+qqnorm(residuals(modelo3),main="modelo3")
+qqline(residuals(modelo3))
+qqnorm(residuals(modelo4),main="modelo4")
+qqline(residuals(modelo4))
