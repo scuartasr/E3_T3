@@ -379,10 +379,10 @@ auto.arima(lny,ic="bic",seasonal.test="seas")
 ## 6.2. Usando armasubsets ==================
 ## __________________________________________
 
-win.graph(heigh=5,width=9) 
+#win.graph(heigh=5,width=9) 
 plot(armasubsets(diffmixta,nar=12,nma=12,y.name='AR',ar.method='ols'))
 
-win.graph(heigh=5,width=9) 
+#win.graph(heigh=5,width=9) 
 plot(armasubsets(diffmixta,nar=18,nma=18,y.name='AR',ar.method="ols"))
 
 ##
@@ -426,7 +426,7 @@ modelo3 <- Arima(lny,
 modelo3
 coeftest(modelo3)
 
-# Modelo cuatro. 
+# Modelo cuatro. ARIMA(9, 1, 10)(0, 1, 1)[12]
 
 p4 <- c(NA, NA, rep(0, 6), NA)
 q4 <- c(rep(0, 9), NA)
@@ -449,8 +449,8 @@ yhat3=exp(modelo3$fitted)*exp(modelo3$sigma2/2)
 yhat4=exp(modelo4$fitted)*exp(modelo4$sigma2/2)
 
 # Gráfico de ajuste
-win.graph(width=18,height=13)
-layout(rbind(c(1,2,3),c(4,5,6)))
+#win.graph(width=18,height=13)
+#layout(rbind(c(1,2,3),c(4,5,6)))
 plot(datos)
 lines(yhat1,col=2)
 legend("topleft",legend=c("Original","Ajuste modelo 1"),col=1:2,lty=1)
@@ -489,7 +489,7 @@ rownames(tablacriterios)=paste0("Modelo",1:4)
 tablacriterios
 
 #Residuales y sus ACF y PACF
-layout(rbind(c(1,2),c(3,4)))
+#layout(rbind(c(1,2),c(3,4)))
 plot.ts(residuals(modelo1))
 abline(h=c(-2*sqrt(modelo1$sigma2),0,2*sqrt(modelo1$sigma2)),col=2)
 plot(as.numeric(modelo1$fitted),residuals(modelo1))
@@ -497,7 +497,7 @@ abline(h=c(-2*sqrt(modelo1$sigma2),0,2*sqrt(modelo1$sigma2)),col=2)
 acf(as.numeric(residuals(modelo1)),ci.type="ma",lag.max=36)
 pacf(as.numeric(residuals(modelo1)),lag.max=36)
 
-layout(rbind(c(1,2),c(3,4)))
+#layout(rbind(c(1,2),c(3,4)))
 plot.ts(residuals(modelo2))
 abline(h=c(-2*sqrt(modelo2$sigma2),0,2*sqrt(modelo2$sigma2)),col=2)
 plot(as.numeric(modelo2$fitted),residuals(modelo2))
@@ -505,7 +505,7 @@ abline(h=c(-2*sqrt(modelo2$sigma2),0,2*sqrt(modelo2$sigma2)),col=2)
 acf(as.numeric(residuals(modelo2)),ci.type="ma",lag.max=36)
 pacf(as.numeric(residuals(modelo2)),lag.max=36)
 
-layout(rbind(c(1,2),c(3,4)))
+#layout(rbind(c(1,2),c(3,4)))
 plot.ts(residuals(modelo3))
 abline(h=c(-2*sqrt(modelo3$sigma2),0,2*sqrt(modelo3$sigma2)),col=2)
 plot(as.numeric(modelo3$fitted),residuals(modelo3))
@@ -513,7 +513,7 @@ abline(h=c(-2*sqrt(modelo3$sigma2),0,2*sqrt(modelo3$sigma2)),col=2)
 acf(as.numeric(residuals(modelo3)),ci.type="ma",lag.max=36)
 pacf(as.numeric(residuals(modelo3)),lag.max=36)
 
-layout(rbind(c(1,2),c(3,4)))
+#layout(rbind(c(1,2),c(3,4)))
 plot.ts(residuals(modelo4))
 abline(h=c(-2*sqrt(modelo4$sigma2),0,2*sqrt(modelo4$sigma2)),col=2)
 plot(as.numeric(modelo4$fitted),residuals(modelo4))
@@ -537,8 +537,8 @@ shapiro.test(residuals(modelo4))
 
 
 #Gr?ficos probabilidad normal s?lo modelos 1 a 4 pues en 5 se rechaza RB
-layout(rbind(c(1,1,2,2),c(3,3,4,4)))
-qqnorm(residuals(modelo1),main="modelo1")
+#layout(rbind(c(1,1,2,2),c(3,3,4,4)))
+qqnorm(residuals(modelo1),main="Modelo 1")
 qqline(residuals(modelo1),col="red")
 qqnorm(residuals(modelo2),main="modelo2")
 qqline(residuals(modelo2),col="red")
