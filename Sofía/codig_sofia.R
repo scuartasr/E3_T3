@@ -1,4 +1,4 @@
-# Eliminación de todos los objetos anteriores
+# Eliminaci?n de todos los objetos anteriores
 rm(list=ls(all=TRUE))
 
 # _____________________________________________________________________________
@@ -24,7 +24,7 @@ source("https://raw.githubusercontent.com/NelfiGonzalez/Funciones-de-Usuario-Est
 source("https://raw.githubusercontent.com/NelfiGonzalez/Funciones-de-Usuario-Estadistica-III/main/Funcion-SuavizamientoEstacional.R")
 source("https://raw.githubusercontent.com/NelfiGonzalez/Funciones-de-Usuario-Estadistica-III/main/Funcion-Descomp.Loess.R")
 source("https://raw.githubusercontent.com/NelfiGonzalez/Funciones-de-Usuario-Estadistica-III/main/Funciones-BP.LB.test-pruebaDW1.R")
-
+source("https://raw.githubusercontent.com/NelfiGonzalez/Funciones-de-Usuario-Estadistica-III/main/Funcion-regexpo.ErrorARMA.R")
 ##
 ##
 ##
@@ -41,11 +41,11 @@ datos <- read.table(file = file.choose(),
                     sep=";",
                     skip=15,
                     dec=",")
-# Selección de la columna necesaria
+# Selecci?n de la columna necesaria
 datos <- as.data.frame(datos[, 7])
 colnames(datos) <- c("ventas.nominal")
 
-# Creación del objeto ts
+# Creaci?n del objeto ts
 datos <- ts(datos,
             freq=12,
             start=c(2001,1))
@@ -56,26 +56,26 @@ datos <- ts(datos,
 
 # _____________________________________________________________________________
 # _____________________________________________________________________________
-# 2. Análisis descriptivo =====================================================
+# 2. An?lisis descriptivo =====================================================
 
-# Gráfica de la serie de tiempo lineal
+# Gr?fica de la serie de tiempo lineal
 
 par(adj = 0.5, col = 'black')
 plot(datos,
-     xlab = "Año\n",
-     ylab = "Índice de ventas nominal",
+     xlab = "A?o\n",
+     ylab = "?ndice de ventas nominal",
      cex.main = 1,
      lwd = 1)
 grid(col = 'gray', lwd = 1)
 par(adj = 1,
     col = 'black')
 
-# Gráfica de la serie de tiempo en escala logarítmica
+# Gr?fica de la serie de tiempo en escala logar?tmica
 
 par(adj = 0.5, col = 'black')
 plot(log(datos),
-     xlab = "Año\n",
-     ylab = "Logaritmo del índice de ventas nominal",
+     xlab = "A?o\n",
+     ylab = "Logaritmo del ?ndice de ventas nominal",
      cex.main = 1,
      lwd = 1)
 grid(col = 'gray', lwd = 1)
@@ -88,10 +88,10 @@ par(adj = 0.5, col = 'black')
 boxplot(log(datos)~cycle(log(datos)),
         names = month.abb,
         cex.axis = 0.8,
-        main = "Valor del índice mensual de ventas nominal
+        main = "Valor del ?ndice mensual de ventas nominal
         en Colombia por mes",
         xlab = "Mes",
-        ylab = "Índice mensual de ventas nominal")
+        ylab = "?ndice mensual de ventas nominal")
 par(adj = 1)
 title(sub = "Fuente. DANE")
 
@@ -101,28 +101,28 @@ par(adj = 0.5)
 log.desest <- diff(log(datos))
 periodogram(log.desest,
             lwd = 2,
-            main = "Periodograma para el índice de ventas nominal
+            main = "Periodograma para el ?ndice de ventas nominal
             en Colombia por mes",
             xlab = "Frecuencias",
-            ylab = "Asociación")
+            ylab = "Asociaci?n")
 abline(v = c(1:6)/12,
        col=2, lty=2)
 
-# Gráfico de la componente de tendencia de la gráfica
+# Gr?fico de la componente de tendencia de la gr?fica
 
 par(adj = 0.5)
 plot(decompose(log(datos))$trend,
-     xlab = "Año",
-     ylab = "Logaritmo del índice mensual de ventas nominales",
-     main = "Tendencia del logaritmo índice mensual de ventas
+     xlab = "A?o",
+     ylab = "Logaritmo del ?ndice mensual de ventas nominales",
+     main = "Tendencia del logaritmo ?ndice mensual de ventas
      nominales en Colombia entre 2001 y 2021",
      lwd = 2)
 par(adj = 1,
     col = 'black')
-title(sub = "Fuente. DANE. Estimación de la tendencia hecha con R.")
+title(sub = "Fuente. DANE. Estimaci?n de la tendencia hecha con R.")
 grid(col = 'gray', lwd = 1)
 
-# Gráfico de la función de autocorrelación muestral (ACF) del logaritmo
+# Gr?fico de la funci?n de autocorrelaci?n muestral (ACF) del logaritmo
 
 par(adj = 0.5)
 acf(as.numeric(log(datos)),
@@ -133,19 +133,19 @@ acf(as.numeric(log(datos)),
     ci.col = 2,
     main = '')
 
-# Gráfico de la componente estacional de la serie
+# Gr?fico de la componente estacional de la serie
 
 descomposicion <- decompose(datos, type = "multiplicative")
 
 par(adj = 0.5)
 plot(descomposicion$seasonal,
-     main = "Componente estacional del índice mensual de
+     main = "Componente estacional del ?ndice mensual de
      ventas nominales en Colombia entre 2001 y 2021",
-     xlab = "Año",
-     ylab = "Índice mensual de ventas nominales")
+     xlab = "A?o",
+     ylab = "?ndice mensual de ventas nominales")
 par(adj = 1,
     col = 'black')
-title(sub = "Fuente. DANE. Estimación de la estacionalidad hecha con R.")
+title(sub = "Fuente. DANE. Estimaci?n de la estacionalidad hecha con R.")
 
 par(adj = 1,
     col = 'black')
@@ -156,20 +156,20 @@ par(adj = 1,
 
 # _____________________________________________________________________________
 # _____________________________________________________________________________
-# 3. Preparacón para el modelo exponencial polinomial estacional ==============
+# 3. Preparac?n para el modelo exponencial polinomial estacional ==============
 
-# Definición de variables necesarias
+# Definici?n de variables necesarias
 
-m <- 12                # Número de periodos a pronosticar dentro de la muestra
-n <- length(datos) - m # Tamaño de la muestra para el ajuste
-t <- 1:n               # Índice de tiempo en los periodos de ajuste
+m <- 12                # N?mero de periodos a pronosticar dentro de la muestra
+n <- length(datos) - m # Tama?o de la muestra para el ajuste
+t <- 1:n               # ?ndice de tiempo en los periodos de ajuste
 t2 <- t^2
 t3 <- t^3
 t4 <- t^4
 t5 <- t^5
 t6 <- t^6
 
-# Funciones trigonométricas para la componente estacional
+# Funciones trigonom?tricas para la componente estacional
 
 sen1 <- sin(pi*t/6)
 cos1 <- cos(pi*t/6)
@@ -188,23 +188,23 @@ yt <- ts(datos[t],
          frequency = 12,
          start=c(2001,1))
 
-# Matriz de diseño
+# Matriz de dise?o
 
 X1 <- data.frame(t, t2, t3, t4, t5, t6,
                  sen1, cos1, sen2, cos2,
                  sen3, cos3, sen4, cos4,
                  sen5, cos5)
 
-# Valores de las variables en la validación cruzada
+# Valores de las variables en la validaci?n cruzada
 
-tnuevo <- (n+1):length(datos) # Índice de tiempo en los pronósticos
+tnuevo <- (n+1):length(datos) # ?ndice de tiempo en los pron?sticos
 t2nuevo <- tnuevo^2
 t3nuevo <- tnuevo^3
 t4nuevo <-  tnuevo^4
 t5nuevo <-  tnuevo^5
 t6nuevo <-  tnuevo^6
 
-#Funciones trigonométricas en los periodos de pronóstico
+#Funciones trigonom?tricas en los periodos de pron?stico
 
 sen1n <- sin(pi*tnuevo/6)
 cos1n <- cos(pi*tnuevo/6)
@@ -223,8 +223,8 @@ ytf <- ts(datos[tnuevo],
           freq = 12,
           start = c(2020, 12))
 
-# Matriz de diseño con las potencias de t en polinomio de grado seis
-# y trigonométricas para la estacionalidad
+# Matriz de dise?o con las potencias de t en polinomio de grado seis
+# y trigonom?tricas para la estacionalidad
 
 X1nuevo <- data.frame(t = tnuevo, t2 = t2nuevo, t3 = t3nuevo,
                       t4 = t4nuevo, t5 = t5nuevo, t6 = t6nuevo,
@@ -239,14 +239,14 @@ X1nuevo <- data.frame(t = tnuevo, t2 = t2nuevo, t3 = t3nuevo,
 
 # _____________________________________________________________________________
 # _____________________________________________________________________________
-# 4. Gráficos de las series diferenciadas y sus ACFs ==========================
+# 4. Gr?ficos de las series diferenciadas y sus ACFs ==========================
 
 # Logserie
 
 par(adj = 0.5)
 plot(log(yt),
-     xlab = "Año\n",
-     ylab = "Logaritmo del índice de ventas nominal",
+     xlab = "A?o\n",
+     ylab = "Logaritmo del ?ndice de ventas nominal",
      cex.main = 1,
      lwd = 1)
 grid(col = 'gray', lwd = 1)
@@ -269,11 +269,11 @@ acf(as.numeric(log(yt)),
 d = 1
 D = 1
 
-# Serie logarítmica y su ACF
+# Serie logar?tmica y su ACF
 
 plot(diff(log(yt)),
      ylab = expression(paste(nabla,sep="",log(Y[t]))),
-     xlab = "Año")
+     xlab = "A?o")
 abline(h=mean(diff(log(yt))),
        col = 2)
 grid(col = 'gray', lwd = 1)
@@ -286,7 +286,7 @@ diff1lny=diff(lny)                            # Primera diferencia regular
 
 plot(diff1lny,
      ylab = expression(paste(nabla,sep="",log(Y[t]))),
-     xlab = "Año")
+     xlab = "A?o")
 abline(h=mean(diff(log(yt))),
        col = 2)
 grid(col = 'gray', lwd = 1)
@@ -305,7 +305,7 @@ diff12lny = diff(lny,
 
 plot(diff12lny,
      ylab = expression(paste(nabla[12],sep="",log(Y[t]))),
-     xlab = "Año")
+     xlab = "A?o")
 abline(h=mean(diff12lny),
        col = 2)
 grid(col = 'gray', lwd = 1)
@@ -325,7 +325,7 @@ diffmixta = diff(diff(lny, lag = 12))
 
 plot(diffmixta,
      ylab = expression(paste(nabla,nabla[12],sep="",log(Y[t]))),
-     xlab = "Año")
+     xlab = "A?o")
 abline(h=mean(diffmixta),
        col = 2)
 grid(col = 'gray', lwd = 1)
@@ -363,7 +363,7 @@ HEGY.test(wts = lny,
 
 # _____________________________________________________________________________
 # _____________________________________________________________________________
-# 6. Identificación de métodos SARIMA =========================================
+# 6. Identificaci?n de m?todos SARIMA =========================================
 
 ## __________________________________________
 ## 6.1. Usando auto.arima ===================
@@ -499,7 +499,7 @@ vector.auxiliar <- c(ytf, predmod1[,1], predmod2[,1],
                      predmod3[,1], predmod4[,1])
 par(adj = 0.5)
 plot(ytf, type = "b", pch = 19, lty = 1, col = 1, lwd = 2,
-     ylab = "Índice de ventas nominales",
+     ylab = "?ndice de ventas nominales",
      xlab = "Periodo [mmm - yy]",
      ylim = c(min(vector.auxiliar), max(vector.auxiliar)),
      xaxt = "n")
@@ -520,5 +520,67 @@ axis(1,at = time(ytf),
                 "abr-21", "may-21", "jun-21", "jul-21",
                 "ago-21", "sep-21", "oct-21", "nov-21"))
 
-#commit
+#GRAFICO COMPARATIVA PRON PUNTUAL 
+
+#mejor modelo global
+
+mmgl <- lm(log(yt)~., data = X1)
+mmgl <- exp(predict(mmgl,
+                           newdata = X1nuevo,
+                           interval = "prediction",
+                           level = 0.95)) * exp(summary(modelo1)$sigma^2/2)
+mmgl <- ts(mmgl,
+                  freq = 12,
+                  start = start(ytf))
+ytpronmmgl <- mmgl[,1]
+
+
+#mejor modelo local
+
+mml <- Descomp.Loess(serie.ajuste = yt,
+                         h = m,
+                         tipo.descomp = "multiplicative",
+                         grado = 1,
+                         criterio = "gcv")
+ytpronmml <- mml$ytpron
+
+#Mejor modelo errores arma ARMA(12,10), con phi7 y theta 10
+param2 <- c(paste0("beta",0:6),
+            "alfa1", "gamma1", "alfa2",
+            "gamma2", "alfa3", "gamma3",
+            "alfa4", "gamma4", "alfa5",
+            "gamma5")
+mma = regexpo.ErrorARMA(respuesta=yt,names.param=param2,data=X1,
+                            newdata=X1nuevo,order=c(12,0,10),
+                            fixed= c(NA,NA,NA,rep(0,3),NA,rep(0,4),NA,rep(0,3),NA,rep(0,4),NA,NA),
+                            method="ML")
+ytpronmma = mma$forecast
+win.graph(width=18,height=18)
+vector.auxiliar <- c(ytf,ytpronmmgl, ytpronmml, ytpronmma,predmod3[,1])
+par(adj = 0.5)
+plot(ytf, type = "b", pch = 19, lty = 1, col = 1, lwd = 2,
+     ylab = "índice de ventas nominales",
+     xlab = "Periodo [mmm - yy]",
+     ylim = c(min(vector.auxiliar), max(vector.auxiliar)),
+     xaxt = "n")
+lines(ytpronmmgl, col = 2, pch = 2, lty = 2, type = "b", lwd = 2)
+lines(ytpronmml, col = 3, pch = 3, lty = 3, type = "b", lwd = 2)
+lines(ytpronmma, col = 4, pch = 4, lty = 4, type = "b", lwd = 2)
+lines(predmod3[,1], col = 5, pch = 5, lty = 5, type = "b", lwd = 2)
+legend("bottomright",
+       legend = c("Real","Global", "Local", "Errores ARMA", "Modelo 3"
+                   ), 
+       col = 1:5,
+       pch = c(19, 2:5),
+       lty = 1:5,
+       lwd = 1,
+       cex= 0.7)
+axis(1,at = time(ytf), 
+     labels = c("dic-20", "ene-21", "feb-21", "mar-21",
+                "abr-21", "may-21", "jun-21", "jul-21",
+                "ago-21", "sep-21", "oct-21", "nov-21"))
+
+accuracy(ytpronmma,ytf)
+
+acf(as.numeric(residuals(mml)),ci.type="ma",lag.max=36,main="ACF modelo local",ci.col=2)
 
